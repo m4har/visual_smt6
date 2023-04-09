@@ -5,6 +5,8 @@
  */
 package visual;
 
+import javax.swing.JFrame;
+import pages.pelanggan;
 /**
  *
  * @author mahar
@@ -16,6 +18,8 @@ public class Visual {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        JFrame pelangganPage = new pelanggan();
+        pelangganPage.setVisible(true);
     }
     
 }
