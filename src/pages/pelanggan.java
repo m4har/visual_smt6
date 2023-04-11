@@ -32,13 +32,26 @@ public class pelanggan extends javax.swing.JFrame {
         con = DB.con;
         st = DB.stm;
         
+        clear();
         getDataTable();
         generateIdPelanggan();
+    }
+    // clear textfield
+    void clear(){
+        generateIdPelanggan();
+        txtname.setText("");
+        buttonGroup1.clearSelection();
+        txttelp.setText("");
+        areaalamat.setText("");
+        btndelete.setEnabled(false);
+        btnedit.setEnabled(false);
+        btnsimpan.setEnabled(true);
     }
     
     // get data untuk table
     public void getDataTable(){
-        String query = "select * from pelanggan";
+        String searchItem = txtsearch.getText();
+        String query = "select * from pelanggan where id like '%"+searchItem+"%' or nmplg like '%"+searchItem+"%' order by id asc";
         Object[] baris = {"ID","Nama","Jenis Kelamin","No Telp","Alamat"};
         DefaultTableModel tabmode = new DefaultTableModel(null, baris);
         try {
@@ -53,6 +66,7 @@ public class pelanggan extends javax.swing.JFrame {
                     rs.getString(5),
                 });
             }
+            rs.close();
             tblpelanggan.setModel(tabmode);
         } catch (Exception e) {
         }
@@ -68,6 +82,7 @@ public class pelanggan extends javax.swing.JFrame {
                 count = Integer.parseInt(rs.getString(1))+1;
                 txtid.setText("p"+count);
             }
+            rs.close();
         } catch (Exception e) {
             System.out.println("generate id"+e);
         }
@@ -91,6 +106,7 @@ public class pelanggan extends javax.swing.JFrame {
             st.executeUpdate(query);
             generateIdPelanggan();
             getDataTable();
+            st.close();
         } catch (Exception e) {
             System.out.println("create pelanggan"+e);
         }
@@ -257,6 +273,11 @@ public class pelanggan extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblpelanggan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblpelangganMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblpelanggan);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -395,6 +416,7 @@ public class pelanggan extends javax.swing.JFrame {
 
     private void btncancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncancelActionPerformed
         // TODO add your handling code here:
+        clear();
     }//GEN-LAST:event_btncancelActionPerformed
 
     private void txtidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtidActionPerformed
@@ -411,11 +433,35 @@ public class pelanggan extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
+        getDataTable();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void radiofActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radiofActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_radiofActionPerformed
+
+    private void tblpelangganMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblpelangganMouseClicked
+        // TODO add your handling code here:
+        int bar = tblpelanggan.getSelectedRow();
+        String id = tblpelanggan.getValueAt(bar, 0).toString();
+        String nama = tblpelanggan.getValueAt(bar, 1).toString();
+        String jenis = tblpelanggan.getValueAt(bar, 2).toString();
+        String telp = tblpelanggan.getValueAt(bar, 3).toString();
+        String alamat = tblpelanggan.getValueAt(bar, 4).toString();
+        txtid.setText(id);
+        txtname.setText(nama);
+        if("l".equals(jenis)){
+            radiom.setSelected(true);
+        } else {
+            radiof.setSelected(true);
+        }
+        txttelp.setText(telp);
+        areaalamat.setText(alamat);
+        
+        btnsimpan.setEnabled(false);
+        btnedit.setEnabled(true);
+        btndelete.setEnabled(true);
+    }//GEN-LAST:event_tblpelangganMouseClicked
 
     /**
      * @param args the command line arguments
